@@ -17,7 +17,7 @@ class TodoController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +26,7 @@ class TodoController extends Controller
     public function index(Request $request)
     {
         $todo = Auth::user()->todo()->get();
-        return response()->json(['status' => 'success','result' => $todo]);
+        return response()->json(['status' => 'success', 'result' => $todo]);
     }
 
     /**
@@ -38,16 +38,15 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-        'todo' => 'required',
-        'description' => 'required',
-        'category' => 'required'
-         ]);
-        if(Auth::user()->todo()->Create($request->all())){
+            'todo' => 'required',
+            'description' => 'required',
+            'category' => 'required'
+        ]);
+        if (Auth::user()->todo()->Create($request->all())) {
             return response()->json(['status' => 'success']);
-        }else{
+        } else {
             return response()->json(['status' => 'fail']);
         }
-
     }
 
     /**
@@ -60,7 +59,6 @@ class TodoController extends Controller
     {
         $todo = Todo::where('id', $id)->get();
         return response()->json($todo);
-        
     }
 
     /**
@@ -72,7 +70,7 @@ class TodoController extends Controller
     public function edit($id)
     {
         $todo = Todo::where('id', $id)->get();
-        return view('todo.edittodo',['todos' => $todo]);
+        return view('todo.edittodo', ['todos' => $todo]);
     }
 
     /**
@@ -85,13 +83,13 @@ class TodoController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-        'todo' => 'filled',
-        'description' => 'filled',
-        'category' => 'filled'
-         ]);
+            'todo' => 'filled',
+            'description' => 'filled',
+            'category' => 'filled'
+        ]);
         $todo = Todo::find($id);
-        if($todo->fill($request->all())->save()){
-           return response()->json(['status' => 'success']);
+        if ($todo->fill($request->all())->save()) {
+            return response()->json(['status' => 'success']);
         }
         return response()->json(['status' => 'failed']);
     }
@@ -104,8 +102,17 @@ class TodoController extends Controller
      */
     public function destroy($id)
     {
-        if(Todo::destroy($id)){
-             return response()->json(['status' => 'success']);
+        // if (Todo::destroy($id)) {
+        //     return response()->json(['status' => 'success']);
+        // }
+        $model = Todo::find($id);
+        if (empty($model)) {
+            return response()->json(['status' => 'fail', 'msg' => 'Todo does not exist.']);
+        }
+        if ($model->delete()) {
+            return response()->json(['status' => 'success', 'msg' => 'Delete successfully.']);
+        } else {
+            return response()->json(['status' => 'fail', 'msg' => 'Delete failed, please try later.']);
         }
     }
 }

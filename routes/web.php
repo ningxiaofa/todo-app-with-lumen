@@ -15,10 +15,15 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 $app->group(['prefix' => 'api/'], function ($app) {
-    $app->get('login/','UsersController@authenticate');
-    $app->post('todo/','TodoController@store');
+    // Post email and password by Get method is not good idea in browser，but maybe let it slide in an App
+    // Of course，you can use Post method, but in fact, they have no differences.
+    $app->get('login/', 'UsersController@authenticate');
+    $app->post('todo/', 'TodoController@store');
     $app->get('todo/', 'TodoController@index');
     $app->get('todo/{id}/', 'TodoController@show');
     $app->put('todo/{id}/', 'TodoController@update');
     $app->delete('todo/{id}/', 'TodoController@destroy');
+
+    // register
+    $app->get('register/', 'UsersController@register');
 });

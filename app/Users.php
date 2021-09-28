@@ -10,10 +10,10 @@ class Users extends Model implements Authenticatable
 {
     //
     use AuthenticableTrait;
-    protected $fillable = ['username','email','password','userimage'];
+    protected $fillable = ['name', 'email', 'password', 'userimage'];
 
     protected $hidden = [
-    'password'
+        'password'
     ];
 
     /*
@@ -22,6 +22,6 @@ class Users extends Model implements Authenticatable
     */
     public function todo()
     {
-        return $this->hasMany('App\Todo','user_id');
+        return $this->hasMany('App\Todo', 'user_id');
     }
 }
